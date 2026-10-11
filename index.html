@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Shiya Naik — Developer Portfolio</title>
+<meta name="description" content="Portfolio of Shiya Naik — Computer Engineering student and aspiring software developer." />
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<!-- Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+<style>
+  /* ============================================================
+     THEME — swap these to change the whole site's look
+     ============================================================ */
+  :root {
+    --accent-color: #7c5cff;          /* PRIMARY ACCENT (Phase-1 choice) */
+    --accent-soft: rgba(124, 92, 255, 0.15);
+    --accent-contrast: #ffffff;       /* readable text on top of accent  */
+
+    --bg: #0a0a0f;
+    --bg-2: #101018;
+    --surface: rgba(255, 255, 255, 0.035);
+    --surface-2: rgba(255, 255, 255, 0.06);
+    --border: rgba(255, 255, 255, 0.09);
+    --border-strong: rgba(255, 255, 255, 0.18);
+
+    --text: #ececf4;
+    --muted: #9a9aad;
+
+    --radius: 20px;
+    --radius-sm: 12px;
+    --shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.7);
+
+    --font-head: 'Space Grotesk', system-ui, sans-serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+  }
+
+  /* ============================================================
+     RESET / BASE
+     ============================================================ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+  body {
+    font-family: var(--font-body);
+    background:
+      radial-gradient(1100px 600px at 80% -10%, var(--accent-soft), transparent 60%),
+      radial-gradient(900px 500px at 0% 100%, rgba(0, 209, 178, 0.06), transparent 55%),
+      var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---- Text selection uses the accent colour ---- */
+  ::selection { background: var(--accent-color); color: var(--accent-contrast); }
+  ::-moz-selection { background: var(--accent-color); color: var(--accent-contrast); }
+
+  /* ---- Hide the OS cursor (custom cursor takes over) ---- */
+  body, a, button, input, textarea, .clickable { cursor: none !important; }
+
+  a { color: inherit; text-decoration: none; }
+  img { max-width: 100%; display: block; }
+
+  .wrap { width: min(1160px, 92vw); margin-inline: auto; }
+
+  /* ============================================================
+     CUSTOM CURSOR  (fixed • pointer-events:none • z-index 99999)
+     ============================================================ */
+  .cursor-dot,
+  .cursor-ring {
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 99999;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    will-change: transform;
+  }
+  .cursor-dot {
+    width: 7px; height: 7px;
+    background: var(--accent-color);
+    box-shadow: 0 0 12px var(--accent-color);
+  }
+  .cursor-ring {
+    width: 34px; height: 34px;
+    border: 1.5px solid var(--accent-color);
+    transition: width .22s ease, height .22s ease, background-color .22s ease, opacity .22s ease;
+  }
+  .cursor-ring.is-hover {
+    width: 62px; height: 62px;
+    background: var(--accent-soft);
+  }
+  .cursor-ring.is-down { width: 24px; height: 24px; background: var(--accent-soft); }
+
+  /* Hide custom cursor on touch devices, restore native feel */
+  @media (hover: none), (pointer: coarse) {
+    .cursor-dot, .cursor-ring { display: none; }
+    body, a, button, input, textarea, .clickable { cursor: auto !important; }
+  }
+
+  /* ============================================================
+     NAV
+     ============================================================ */
+  header.nav {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 500;
+    padding: 18px 0;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    background: linear-gradient(to bottom, rgba(10,10,15,.75), rgba(10,10,15,0));
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; }
+  .brand {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: .2px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .brand .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent-color); box-shadow: 0 0 14px var(--accent-color); }
+  .nav-links { display: flex; align-items: center; gap: 28px; }
+  .nav-links a {
+    font-size: .92rem; color: var(--muted); font-weight: 500;
+    position: relative; transition: color .25s ease;
+  }
+  .nav-links a::after {
+    content: ""; position: absolute; left: 0; bottom: -5px; height: 2px; width: 0;
+    background: var(--accent-color); transition: width .3s ease;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-cta {
+    border: 1px solid var(--border-strong);
+    padding: 9px 18px; border-radius: 100px; font-size: .88rem;
+    transition: border-color .25s ease, background-color .25s ease;
+  }
+  .nav-cta:hover { border-color: var(--accent-color); background: var(--accent-soft); }
+  @media (max-width: 720px) { .nav-links a:not(.nav-cta) { display: none; } }
+
+  /* Scroll progress */
+  .scroll-bar {
+    position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--accent-color), #00d1b2);
+    z-index: 600;
+  }
+
+  /* ============================================================
+     HERO
+     ============================================================ */
+  .hero { min-height: 100vh; display: flex; align-items: center; padding: 140px 0 80px; }
+  .hero-grid { display: grid; grid-template-columns: 1.25fr .9fr; gap: 60px; align-items: center; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-size: .82rem; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 22px;
+    border: 1px solid var(--border); padding: 7px 14px; border-radius: 100px;
+  }
+  .eyebrow .pulse { width: 8px; height: 8px; border-radius: 50%; background: #00d1b2; box-shadow: 0 0 0 0 rgba(0,209,178,.6); animation: pulse 2s infinite; }
+  @keyframes pulse { 70% { box-shadow: 0 0 0 10px rgba(0,209,178,0); } 100% { box-shadow: 0 0 0 0 rgba(0,209,178,0); } }
+
+  .hero h1 {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(2.6rem, 6.2vw, 4.6rem);
+    line-height: 1.03;
+    letter-spacing: -0.02em;
+  }
+  .hero h1 .accent {
+    background: linear-gradient(120deg, var(--accent-color), #00d1b2);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+  }
+  .hero p.lead { color: var(--muted); font-size: 1.08rem; max-width: 46ch; margin-top: 24px; }
+
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 36px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 26px; border-radius: 100px; font-weight: 600; font-size: .95rem;
+    border: 1px solid transparent; transition: transform .2s ease, background-color .25s ease, border-color .25s ease, box-shadow .25s ease;
+  }
+  .btn-primary { background: var(--accent-color); color: var(--accent-contrast); box-shadow: 0 14px 40px -12px var(--accent-color); }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 20px 50px -12px var(--accent-color); }
+  .btn-ghost { border-color: var(--border-strong); color: var(--text); }
+  .btn-ghost:hover { transform: translateY(-3px); border-color: var(--accent-color); background: var(--accent-soft); }
+
+  /* Profile card */
+  .profile-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .profile-card::before {
+    content: ""; position: absolute; inset: 0 0 auto 0; height: 3px;
+    background: linear-gradient(90deg, var(--accent-color), transparent);
+  }
+  .profile-top { display: flex; align-items: center; gap: 16px; }
+  .avatar {
+    width: 72px; height: 72px; border-radius: 50%;
+    border: 2px solid var(--accent-color);
+    object-fit: cover; background: var(--bg-2);
+  }
+  .profile-top h3 { font-family: var(--font-head); font-size: 1.15rem; line-height: 1.2; }
+  .profile-top .login { color: var(--muted); font-size: .9rem; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 22px; }
+  .stat {
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 14px 10px; text-align: center;
+  }
+  .stat .num { font-family: var(--font-head); font-weight: 700; font-size: 1.3rem; color: var(--accent-color); }
+  .stat .lbl { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .profile-bio { color: var(--muted); font-size: .9rem; margin-top: 20px; }
+  .profile-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; color: var(--accent-color); font-weight: 600; font-size: .9rem; }
+
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 44px; }
+    .hero { padding-top: 120px; }
+  }
+
+  /* ============================================================
+     SECTIONS
+     ============================================================ */
+  section { padding: 100px 0; }
+  .sec-head { margin-bottom: 54px; max-width: 60ch; }
+  .sec-head .kicker { color: var(--accent-color); font-size: .82rem; letter-spacing: .16em; text-transform: uppercase; font-weight: 600; }
+  .sec-head h2 { font-family: var(--font-head); font-size: clamp(1.9rem, 4vw, 2.8rem); letter-spacing: -0.02em; margin-top: 10px; }
+  .sec-head p { color: var(--muted); margin-top: 14px; }
+
+  /* Projects */
+  .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 26px;
+    display: flex; flex-direction: column;
+    min-height: 220px;
+    transform-style: preserve-3d;
+    transition: border-color .3s ease, box-shadow .3s ease;
+    position: relative;
+  }
+  .project-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow); }
+  .project-card .pc-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .project-card .folder { color: var(--accent-color); font-size: 1.5rem; }
+  .project-card .pc-links { display: flex; gap: 14px; color: var(--muted); }
+  .project-card .pc-links a:hover { color: var(--accent-color); }
+  .project-card h3 { font-family: var(--font-head); font-size: 1.2rem; margin-bottom: 10px; transform: translateZ(30px); }
+  .project-card p { color: var(--muted); font-size: .92rem; flex: 1; transform: translateZ(20px); }
+  .project-card .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .tag {
+    font-size: .74rem; color: var(--accent-color);
+    background: var(--accent-soft); border: 1px solid var(--border);
+    padding: 4px 11px; border-radius: 100px;
+  }
+  .project-card .stars { font-size: .8rem; color: var(--muted); display: inline-flex; align-items: center; gap: 6px; }
+  .project-card .stars i { color: #ffd166; }
+
+  .projects-status { color: var(--muted); font-size: .95rem; padding: 20px 0; }
+  .spinner {
+    width: 26px; height: 26px; border-radius: 50%;
+    border: 2px solid var(--border); border-top-color: var(--accent-color);
+    animation: spin .8s linear infinite; display: inline-block; vertical-align: middle; margin-right: 10px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* About / skills */
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: start; }
+  .about-grid p { color: var(--muted); margin-bottom: 16px; }
+  .skills { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+  .skill {
+    border: 1px solid var(--border); border-radius: 100px;
+    padding: 8px 16px; font-size: .86rem; color: var(--text);
+    background: var(--surface); transition: border-color .25s, color .25s;
+  }
+  .skill:hover { border-color: var(--accent-color); color: var(--accent-color); }
+  @media (max-width: 820px) { .about-grid { grid-template-columns: 1fr; gap: 32px; } }
+
+  /* Contact / footer */
+  .contact {
+    text-align: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 70px 30px;
+    backdrop-filter: blur(10px);
+  }
+  .contact h2 { font-family: var(--font-head); font-size: clamp(2rem, 5vw, 3.2rem); letter-spacing: -0.02em; }
+  .contact p { color: var(--muted); margin: 16px auto 30px; max-width: 52ch; }
+  .socials { display: flex; justify-content: center; gap: 18px; margin-top: 34px; }
+  .socials a {
+    width: 46px; height: 46px; border-radius: 50%;
+    display: grid; place-items: center;
+    border: 1px solid var(--border); color: var(--muted);
+    transition: transform .25s ease, color .25s ease, border-color .25s ease, background-color .25s ease;
+  }
+  .socials a:hover { transform: translateY(-4px); color: var(--accent-color); border-color: var(--accent-color); background: var(--accent-soft); }
+  footer.foot { text-align: center; padding: 40px 0 60px; color: var(--muted); font-size: .85rem; }
+  footer.foot .accent { color: var(--accent-color); }
+
+  @media (max-width: 600px) {
+    section { padding: 72px 0; }
+    .contact { padding: 50px 20px; }
+  }
+</style>
+</head>
+
+<body>
+  <!-- Custom cursor -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- Scroll progress -->
+  <div class="scroll-bar" id="scrollBar"></div>
+
+  <!-- NAV -->
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a href="#top" class="brand clickable"><span class="dot"></span> Shiya Naik</a>
+      <nav class="nav-links">
+        <a href="#work">Work</a>
+        <a href="#about">About</a>
+        <a href="#contact" class="nav-cta clickable">Get in touch</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow" data-hero><span class="pulse"></span> Available for work</span>
+          <h1 data-hero>
+            Building <span class="accent">digital experiences</span><br />
+            that feel effortless.
+          </h1>
+          <p class="lead" data-hero>
+            Hi, I'm Shiya Naik — a Computer Engineering student and aspiring
+            software developer. I love turning ideas into fast, thoughtful products.
+            Here's a look at what I've been building.
+          </p>
+          <div class="hero-actions" data-hero>
+            <a href="#work" class="btn btn-primary clickable"><i class="fa-solid fa-arrow-down"></i> View my work</a>
+            <a href="https://github.com/shiyanaik2003" target="_blank" rel="noopener" class="btn btn-ghost clickable">
+              <i class="fa-brands fa-github"></i> GitHub
+            </a>
+          </div>
+        </div>
+
+        <!-- Live GitHub profile card -->
+        <aside class="profile-card" data-hero>
+          <div class="profile-top">
+            <img id="ghAvatar" class="avatar" alt="GitHub avatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72'%3E%3Crect width='72' height='72' fill='%23151520'/%3E%3C/svg%3E" />
+            <div>
+              <h3 id="ghName">Shiya Naik</h3>
+              <span class="login" id="ghLogin">@shiyanaik2003</span>
+            </div>
+          </div>
+          <div class="stats">
+            <div class="stat"><div class="num" id="ghRepos">—</div><div class="lbl">Repos</div></div>
+            <div class="stat"><div class="num" id="ghFollowers">—</div><div class="lbl">Followers</div></div>
+            <div class="stat"><div class="num" id="ghFollowing">—</div><div class="lbl">Following</div></div>
+          </div>
+          <p class="profile-bio" id="ghBio">Computer Engineering Student | Aspiring Software Developer</p>
+          <a class="profile-link clickable" id="ghProfileLink" href="https://github.com/shiyanaik2003" target="_blank" rel="noopener">
+            <i class="fa-brands fa-github"></i> View GitHub profile
+          </a>
+        </aside>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="work">
+      <div class="wrap">
+        <div class="sec-head" data-reveal>
+          <span class="kicker">Selected work</span>
+          <h2>Top repositories</h2>
+          <p>My most-starred projects, pulled live from GitHub. Each one taught me something new.</p>
+        </div>
+        <div class="projects-grid" id="projectsGrid">
+          <div class="projects-status"><span class="spinner"></span> Loading repositories…</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about">
+      <div class="wrap about-grid">
+        <div data-reveal>
+          <div class="sec-head" style="margin-bottom: 24px;">
+            <span class="kicker">About me</span>
+            <h2>Curious by default.</h2>
+          </div>
+          <p>
+            I'm a Computer Engineering student and an aspiring software developer. I enjoy
+            building products that are quick to load, easy to use and a little delightful —
+            like JobMate AI, a job finder I built to help students discover the right
+            internships and part-time work.
+          </p>
+          <p>
+            I care about the small details: the easing of an animation, the contrast of a
+            colour, the feel of a button. When I'm not coding, I'm learning new tools and
+            looking for ways to turn what I study into things people can actually use.
+          </p>
+        </div>
+        <div data-reveal>
+          <div class="sec-head" style="margin-bottom: 24px;">
+            <span class="kicker">Toolbox</span>
+            <h2>What I build with.</h2>
+          </div>
+          <div class="skills">
+            <span class="skill">JavaScript</span>
+            <span class="skill">TypeScript</span>
+            <span class="skill">React</span>
+            <span class="skill">Node.js</span>
+            <span class="skill">HTML &amp; CSS</span>
+            <span class="skill">GSAP</span>
+            <span class="skill">Python</span>
+            <span class="skill">Git</span>
+            <span class="skill">REST APIs</span>
+            <span class="skill">UI/UX</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <div class="wrap">
+        <div class="contact" data-reveal>
+          <h2>Let's build something.</h2>
+          <p>Got a project, a role, or just an idea worth talking through? My inbox is always open.</p>
+          <a href="https://www.linkedin.com/in/shiya-naik-364063373" target="_blank" rel="noopener" class="btn btn-primary clickable">
+            <i class="fa-brands fa-linkedin-in"></i> Connect on LinkedIn
+          </a>
+          <div class="socials">
+            <a class="clickable" href="https://github.com/shiyanaik2003" target="_blank" rel="noopener" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+            <a class="clickable" href="https://www.linkedin.com/in/shiya-naik-364063373" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a class="clickable" href="https://x.com/YOUR-HANDLE" target="_blank" rel="noopener" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+            <a class="clickable" href="mailto:you@example.com" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap">
+      © <span id="year"></span> Shiya Naik · Built with <span class="accent">♥</span> and vanilla JS.
+    </div>
+  </footer>
+
+  <!-- Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <script>
+  /* ============================================================
+     CONFIG — edit these 4 lines with your real details
+     ============================================================ */
+  const GITHUB_USERNAME = "shiyanaik2003"; // <- your GitHub username
+  // (LinkedIn / social links & bio are hardcoded in the HTML above — search "linkedin.com/in/" )
+
+  /* ============================================================
+     Helpers
+     ============================================================ */
+  const $ = (sel, ctx = document) => ctx.querySelector(sel);
+  const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
+  const fmt = (n) => (typeof n === "number" ? n.toLocaleString("en-IN") : n);
+
+  /* ============================================================
+     1. CUSTOM CURSOR  (morphs on hover over clickable elements)
+     ============================================================ */
+  (function customCursor() {
+    const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    const dot = $("#cursorDot");
+    const ring = $("#cursorRing");
+    if (!fine || !dot || !ring) return;
+
+    let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+    let ringX = mouseX, ringY = mouseY;
+
+    window.addEventListener("mousemove", (e) => {
+      mouseX = e.clientX; mouseY = e.clientY;
+      dot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
+    });
+
+    // Ring trails behind with easing
+    (function loop() {
+      ringX += (mouseX - ringX) * 0.18;
+      ringY += (mouseY - ringY) * 0.18;
+      ring.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%)`;
+      requestAnimationFrame(loop);
+    })();
+
+    const hoverTargets = "a, button, .clickable, .project-card, .skill";
+    document.addEventListener("mouseover", (e) => {
+      if (e.target.closest(hoverTargets)) ring.classList.add("is-hover");
+    });
+    document.addEventListener("mouseout", (e) => {
+      if (e.target.closest(hoverTargets)) ring.classList.remove("is-hover");
+    });
+    window.addEventListener("mousedown", () => ring.classList.add("is-down"));
+    window.addEventListener("mouseup", () => ring.classList.remove("is-down"));
+  })();
+
+  /* ============================================================
+     2. SCROLL PROGRESS + YEAR
+     ============================================================ */
+  (function scrollProgress() {
+    const bar = $("#scrollBar");
+    const onScroll = () => {
+      const h = document.documentElement;
+      const max = h.scrollHeight - h.clientHeight;
+      bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + "%";
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    const y = $("#year"); if (y) y.textContent = new Date().getFullYear();
+  })();
+
+  /* ============================================================
+     3. GITHUB API FETCH  — profile + top repos
+     ============================================================ */
+  async function loadGitHub() {
+    const grid = $("#projectsGrid");
+
+    // ---- Profile ----
+    try {
+      const res = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}`);
+      if (!res.ok) throw new Error("profile " + res.status);
+      const u = await res.json();
+
+      $("#ghAvatar").src = u.avatar_url;
+      $("#ghAvatar").alt = u.login + " avatar";
+      $("#ghName").textContent = u.name || u.login;
+      $("#ghLogin").textContent = "@" + u.login;
+      $("#ghRepos").textContent = fmt(u.public_repos);
+      $("#ghFollowers").textContent = fmt(u.followers);
+      $("#ghFollowing").textContent = fmt(u.following);
+      if (u.bio) $("#ghBio").textContent = u.bio;
+      const link = $("#ghProfileLink");
+      link.href = u.html_url;
+      $$(".socials a, .btn-ghost").forEach((a) => {
+        if (a.href && a.href.includes("github.com/")) a.href = u.html_url;
+      });
+    } catch (err) {
+      console.warn("GitHub profile fetch failed:", err.message);
+    }
+
+    // ---- Top repositories (sorted by stars) ----
+    try {
+      const res = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`);
+      if (!res.ok) throw new Error("repos " + res.status);
+      const repos = await res.json();
+
+      const top = repos
+        .filter((r) => !r.fork)
+        .sort((a, b) => b.stargazers_count - a.stargazers_count)
+        .slice(0, 6);
+
+      if (!top.length) {
+        grid.innerHTML = `<p class="projects-status">No public repositories found yet — check back soon.</p>`;
+        return;
+      }
+
+      grid.innerHTML = top.map((r) => {
+        const desc = r.description ? escapeHtml(r.description) : "No description provided.";
+        const tags = []
+          .concat(r.language ? [r.language] : [])
+          .concat((r.topics || []).slice(0, 3))
+          .slice(0, 4)
+          .map((t) => `<span class="tag">${escapeHtml(t)}</span>`)
+          .join("");
+        const home = r.homepage
+          ? `<a class="clickable" href="${r.homepage}" target="_blank" rel="noopener" aria-label="Live demo"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>`
+          : "";
+        return `
+          <article class="project-card" data-reveal>
+            <div class="pc-top">
+              <i class="fa-regular fa-folder folder"></i>
+              <div class="pc-links">
+                ${home}
+                <a class="clickable" href="${r.html_url}" target="_blank" rel="noopener" aria-label="Source code"><i class="fa-brands fa-github"></i></a>
+              </div>
+            </div>
+            <h3>${escapeHtml(r.name)}</h3>
+            <p>${desc}</p>
+            <div class="tags">${tags}</div>
+            <div style="margin-top:16px;">
+              <span class="stars"><i class="fa-solid fa-star"></i> ${fmt(r.stargazers_count)}</span>
+            </div>
+          </article>`;
+      }).join("");
+
+      attachTilt();
+      revealAll();
+    } catch (err) {
+      console.warn("GitHub repos fetch failed:", err.message);
+      grid.innerHTML = `<p class="projects-status">Couldn't load repositories right now (GitHub may be rate-limiting). Please try again shortly.</p>`;
+    }
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, (c) => (
+      { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]
+    ));
+  }
+
+  /* ============================================================
+     4. 3D TILT on project cards (vanilla mousemove)
+     ============================================================ */
+  function attachTilt() {
+    $$(".project-card").forEach((card) => {
+      card.addEventListener("mousemove", (e) => {
+        const rect = card.getBoundingClientRect();
+        const px = (e.clientX - rect.left) / rect.width - 0.5;
+        const py = (e.clientY - rect.top) / rect.height - 0.5;
+        const rx = (-py * 10).toFixed(2);
+        const ry = (px * 12).toFixed(2);
+        card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-4px)`;
+      });
+      card.addEventListener("mouseleave", () => {
+        card.style.transform = "perspective(900px) rotateX(0) rotateY(0) translateY(0)";
+      });
+    });
+  }
+
+  /* ============================================================
+     5. GSAP — hero entrance + scroll reveals
+     ============================================================ */
+  const hasGSAP = typeof gsap !== "undefined";
+  if (hasGSAP && typeof ScrollTrigger !== "undefined") gsap.registerPlugin(ScrollTrigger);
+
+  // Hero entrance
+  function heroIntro() {
+    if (!hasGSAP) return;
+    gsap.from("[data-hero]", {
+      y: 34, opacity: 0, duration: 0.9, ease: "power3.out", stagger: 0.12, delay: 0.15
+    });
+  }
+
+  // Scroll reveal (works for static + dynamically-injected cards)
+  function revealAll() {
+    const targets = $$("[data-reveal]");
+    if (!hasGSAP || typeof ScrollTrigger === "undefined") {
+      targets.forEach((el) => (el.style.opacity = 1));
+      return;
+    }
+    targets.forEach((el) => {
+      if (el.dataset.revealed) return;
+      el.dataset.revealed = "1";
+      gsap.from(el, {
+        y: 44, opacity: 0, duration: 0.8, ease: "power3.out",
+        scrollTrigger: { trigger: el, start: "top 88%", toggleActions: "play none none none" }
+      });
+    });
+    ScrollTrigger.refresh();
+  }
+
+  /* ============================================================
+     Boot
+     ============================================================ */
+  window.addEventListener("DOMContentLoaded", () => {
+    heroIntro();
+    revealAll();
+    loadGitHub();
+  });
+  </script>
+</body>
+</html>
